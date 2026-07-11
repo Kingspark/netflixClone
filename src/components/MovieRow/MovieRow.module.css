@@ -1,0 +1,357 @@
+.movieRow {
+  padding: 0 0 24px;
+  position: relative;
+  z-index: 1;
+  width: 100%;
+}
+
+.movieRow h2 {
+  margin: 0 0 12px;
+  padding: 0 10px 0 48px;
+  font-family: var(--font-body);
+  font-size: 1.46rem;
+  font-weight: 800;
+  line-height: 1.1;
+}
+
+.rowSubtitle {
+  margin: 0 0 6px;
+  padding: 0 10px 0 48px;
+  color: #b6b6b6;
+  font-size: 0.92rem;
+}
+
+.rowHeader {
+  padding-right: 10px;
+}
+
+.rowShell {
+  position: relative;
+  width: 100%;
+  display: flex;
+  align-items: center;
+}
+
+.movieStrip {
+  display: flex;
+  gap: 6px;
+  /* no overflow — scroll is driven by translateX in JS so overflow-y stays
+     truly visible (overflow-x: auto would force overflow-y: auto) */
+  overflow: visible;
+  /* 60px top + bottom — expanded card overflows ~26px into adjacent row space
+     but with z-index:10 it renders above adjacent rows */
+  padding: 40px 48px;
+  flex: 1;
+  min-width: 0;
+  width: 100%;
+  align-items: center;
+  transition: transform 320ms cubic-bezier(0.4, 0, 0.2, 1);
+  will-change: transform;
+}
+
+.movieStrip::-webkit-scrollbar {
+  display: none;
+}
+
+.cardSlot {
+  position: relative;
+  outline: none;
+  flex-shrink: 0;
+  width: 220px;
+  overflow: visible;
+  /* height is driven only by the image in default state */
+}
+
+.cardSlot:hover,
+.cardSlot:focus-within {
+  z-index: 10;
+}
+
+.movieCard {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100%;
+  border: none;
+  border-radius: 4px;
+  overflow: hidden;
+  background: #141414;
+  transition:
+    width 280ms cubic-bezier(0.4, 0, 0.2, 1),
+    transform 280ms cubic-bezier(0.4, 0, 0.2, 1),
+    box-shadow 280ms cubic-bezier(0.4, 0, 0.2, 1),
+    border-radius 280ms ease;
+}
+
+/* Reserve space for the image so the strip row has a fixed height */
+.cardSlot::before {
+  content: "";
+  display: block;
+  width: 100%;
+  padding-top: calc(9 / 16 * 100%);
+  /* 16:9 aspect ratio placeholder */
+}
+
+.cardSlot:hover .movieCard,
+.cardSlot:focus-within .movieCard {
+  width: 110%;
+  transform: translate(-50%, -50%);
+  box-shadow: 0 18px 42px rgba(0, 0, 0, 0.72);
+  border-radius: 6px;
+  overflow: visible;
+  z-index: 10;
+}
+
+.movieCard img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  object-position: center top;
+  border-radius: inherit;
+  flex-shrink: 0;
+}
+
+.expandedPanel {
+  background: #141414;
+  padding: 0 14px;
+  max-height: 0;
+  opacity: 0;
+  overflow: hidden;
+  pointer-events: none;
+  transition:
+    max-height 280ms cubic-bezier(0.4, 0, 0.2, 1),
+    opacity 200ms ease,
+    padding 280ms ease;
+  border-radius: 0 0 6px 6px;
+}
+
+.cardSlot:hover .expandedPanel,
+.cardSlot:focus-within .expandedPanel {
+  max-height: 160px;
+  opacity: 1;
+  pointer-events: auto;
+  padding: 12px 14px 14px;
+}
+
+/* isExpanded class for JS-driven hover (same as CSS hover) */
+.isExpanded .movieCard {
+  width: 110%;
+  transform: translate(-50%, -50%);
+  box-shadow: 0 18px 42px rgba(0, 0, 0, 0.72);
+  border-radius: 6px;
+  overflow: visible;
+  z-index: 10;
+}
+
+.isExpanded .expandedPanel {
+  max-height: 160px;
+  opacity: 1;
+  pointer-events: auto;
+  padding: 12px 14px 14px;
+}
+
+.cardTitle {
+  display: block;
+  font-size: 0.95rem;
+  font-weight: 700;
+  margin: 0 0 8px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.cardActions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.cardActions button {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 2px solid #d6d6d6;
+  background: #fff;
+  color: #141414;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 120ms ease;
+}
+
+.cardActions button:hover {
+  transform: scale(1.08);
+  border-color: #fff;
+}
+
+.cardActions button:nth-child(2),
+.cardActions button:nth-child(3),
+.expandIcon {
+  background: transparent;
+  color: #fff;
+}
+
+.expandIcon {
+  margin-left: auto;
+}
+
+.cardActionIcon,
+.rowArrowIcon {
+  width: 20px;
+  height: 20px;
+}
+
+.cardMeta,
+.cardTags {
+  margin: 10px 0 0;
+  font-size: 0.93rem;
+  color: #c0c0c0;
+}
+
+.cardOverview {
+  margin: 8px 0 2px;
+  font-size: 0.82rem;
+  line-height: 1.35;
+  color: #f2f2f2;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.moreInfoButton {
+  margin-top: 12px;
+  padding: 0;
+  border: none;
+  background: transparent;
+  color: #ffffff;
+  font-size: 0.82rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.moreInfoButton:hover {
+  color: #e50914;
+}
+
+.cardMeta {
+  display: flex;
+  gap: 14px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.rowArrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 20;
+  width: 48px;
+  height: 100px;
+  border: none;
+  background: rgba(0, 0, 0, 0.5);
+  color: #e3e3e3;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.leftArrow {
+  left: 0;
+}
+
+.rightArrow {
+  right: 0;
+}
+
+@media (max-width: 900px) {
+  .cardSlot {
+    width: 160px;
+  }
+  .movieStrip {
+    padding: 35px 24px;
+    gap: 4px;
+  }
+  .movieRow h2 {
+    padding-left: 24px;
+    font-size: 1.2rem;
+  }
+  .rowSubtitle {
+    padding-left: 24px;
+  }
+  .cardActions button {
+    width: 32px;
+    height: 32px;
+  }
+  .cardActionIcon {
+    width: 15px;
+    height: 15px;
+  }
+}
+
+@media (max-width: 600px) {
+  .cardSlot {
+    width: 110px;
+  }
+  .movieStrip {
+    padding: 28px 12px;
+    gap: 3px;
+  }
+  .movieRow h2 {
+    padding-left: 12px;
+    font-size: 1rem;
+  }
+  .rowSubtitle {
+    padding-left: 12px;
+    font-size: 0.82rem;
+  }
+  .cardBadge {
+    font-size: 0.65rem;
+  }
+  .cardSlot:hover .expandedPanel,
+  .cardSlot:focus-within .expandedPanel,
+  .isExpanded .expandedPanel {
+    max-height: 110px;
+    padding: 6px 8px 8px;
+  }
+  .cardTitle {
+    font-size: 0.72rem;
+    margin-bottom: 4px;
+  }
+  .cardActions {
+    gap: 5px;
+    margin-bottom: 5px;
+  }
+  .cardActions button {
+    width: 22px;
+    height: 22px;
+    border-width: 1.5px;
+  }
+  .cardActionIcon,
+  .rowArrowIcon {
+    width: 11px;
+    height: 11px;
+  }
+  .cardMeta,
+  .cardTags {
+    font-size: 0.65rem;
+    margin-top: 4px;
+    gap: 6px;
+  }
+  .cardOverview,
+  .moreInfoButton {
+    display: none;
+  }
+  .cardSlot:hover .movieCard,
+  .cardSlot:focus-within .movieCard,
+  .isExpanded .movieCard {
+    width: 120%;
+  }
+}

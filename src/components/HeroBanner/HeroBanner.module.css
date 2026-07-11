@@ -1,0 +1,138 @@
+.heroSection {
+  position: relative;
+  min-height: 740px;
+  overflow: hidden;
+}
+
+.heroBackdrop {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.heroOverlay {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(
+      90deg,
+      rgba(0, 0, 0, 0.74) 0%,
+      rgba(0, 0, 0, 0.18) 47%,
+      rgba(0, 0, 0, 0.5) 100%
+    ),
+    linear-gradient(180deg, rgba(0, 0, 0, 0.08) 55%, rgba(0, 0, 0, 0.95) 100%);
+}
+
+.heroContent {
+  position: absolute;
+  left: 24px;
+  bottom: 80px;
+  max-width: 680px;
+  z-index: 2;
+}
+
+.heroKicker {
+  margin: 0;
+  color: #e50914;
+  font-size: 0.98rem;
+  font-weight: 800;
+  line-height: 1.1;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.heroContent h1 {
+  margin: 10px 0 0;
+  font-family: var(--font-body);
+  font-size: 3.15rem;
+  font-weight: 800;
+  line-height: 0.98;
+  letter-spacing: 0;
+}
+
+.heroMeta {
+  margin: 14px 0 0;
+  color: #d9d9d9;
+  font-size: 0.96rem;
+  font-weight: 700;
+}
+
+.description {
+  max-width: 720px;
+  margin: 14px 0 0;
+  font-size: 1.02rem;
+  font-weight: 700;
+  line-height: 1.34;
+}
+
+.heroActions {
+  margin-top: 22px;
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.heroButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  border: none;
+  border-radius: 4px;
+  padding: 12px 26px;
+  font-size: 0.98rem;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.primaryButton,
+.secondaryButton {
+  background: rgba(255, 255, 255, 0.96);
+  color: #000;
+}
+
+.secondaryButton {
+  background: rgba(255, 255, 255, 0.92);
+}
+
+.buttonIcon {
+  width: 20px;
+  height: 20px;
+}
+
+@media (max-width: 900px) {
+  .heroSection,
+  .heroBackdrop {
+    min-height: 620px;
+    height: 620px;
+  }
+
+  .heroContent {
+    left: 16px;
+    right: 16px;
+    bottom: 64px;
+  }
+
+  .heroKicker {
+    font-size: 0.92rem;
+  }
+
+  .heroContent h1 {
+    font-size: 2.55rem;
+  }
+
+  .description {
+    font-size: 0.95rem;
+  }
+
+  .heroActions {
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+
+  .heroButton {
+    padding: 11px 20px;
+  }
+}

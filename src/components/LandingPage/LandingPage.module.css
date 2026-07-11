@@ -1,0 +1,409 @@
+.page {
+  min-height: 100vh;
+  background: #000;
+  color: #fff;
+}
+
+.topBar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 5;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 24px 48px;
+}
+
+.brandLink {
+  display: inline-flex;
+  text-decoration: none;
+}
+
+.brandLogo {
+  height: 42px;
+  width: auto;
+  display: block;
+}
+
+.topBarActions {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.linkButton,
+.signInButton,
+.secondaryCta,
+.promoStrip button,
+.getStartedButton {
+  border: none;
+  cursor: pointer;
+  font: inherit;
+}
+
+.linkButton {
+  background: transparent;
+  color: #fff;
+  padding: 10px 14px;
+}
+
+.signInButton,
+.getStartedButton {
+  background: #e50914;
+  color: #fff;
+  font-weight: 800;
+  border-radius: 999px;
+  padding: 14px 22px;
+}
+
+.heroSection {
+  position: relative;
+  min-height: 760px;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+}
+
+.heroBackdrop {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.heroOverlay {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(
+      180deg,
+      rgba(0, 0, 0, 0.72) 0%,
+      rgba(0, 0, 0, 0.52) 52%,
+      rgba(0, 0, 0, 0.95) 100%
+    ),
+    linear-gradient(90deg, rgba(0, 0, 0, 0.38), rgba(0, 0, 0, 0.12));
+}
+
+.heroContent {
+  position: relative;
+  z-index: 1;
+  width: min(920px, calc(100% - 32px));
+  margin-top: 84px;
+  text-align: center;
+}
+
+.heroEyebrow {
+  margin: 0;
+  color: #fff;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+
+.heroContent h1 {
+  margin: 14px 0 0;
+  font-size: clamp(3rem, 7vw, 6rem);
+  line-height: 0.9;
+}
+
+.heroCopy {
+  max-width: 760px;
+  margin: 20px auto 0;
+  font-size: 1.15rem;
+  color: #e6e6e6;
+}
+
+.emailForm,
+.emailFormBottom {
+  display: flex;
+  gap: 12px;
+  margin: 28px auto 0;
+  width: min(760px, 100%);
+}
+
+.emailForm input,
+.emailFormBottom input {
+  flex: 1;
+  min-width: 0;
+  border: 1px solid rgba(255, 255, 255, 0.24);
+  background: rgba(0, 0, 0, 0.58);
+  color: #fff;
+  border-radius: 999px;
+  padding: 18px 20px;
+  font: inherit;
+}
+
+.emailForm input::placeholder,
+.emailFormBottom input::placeholder {
+  color: #bcbcbc;
+}
+
+.buttonIcon {
+  width: 18px;
+  height: 18px;
+  margin-left: 8px;
+}
+
+.secondaryCta {
+  margin-top: 14px;
+  border-radius: 999px;
+  padding: 14px 22px;
+  background: rgba(255, 255, 255, 0.08);
+  color: #fff;
+}
+
+.promoStrip {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 18px;
+  padding: 18px 48px;
+  background: linear-gradient(90deg, #221133, #0f1728);
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.promoStrip strong {
+  display: block;
+  font-size: 1.05rem;
+}
+
+.promoStrip span {
+  color: #d7d7d7;
+}
+
+.promoStrip button {
+  background: transparent;
+  color: #fff;
+  text-decoration: underline;
+  padding: 8px 0;
+}
+
+.trendingSection,
+.featuresSection,
+.faqSection {
+  padding: 48px 48px 0;
+}
+
+.sectionHeading h2 {
+  margin: 0;
+  font-size: clamp(2rem, 4vw, 3rem);
+}
+
+.sectionHeading p {
+  margin: 8px 0 0;
+  color: #bdbdbd;
+}
+
+.posterStrip {
+  margin-top: 24px;
+  display: flex;
+  gap: 0;
+  overflow-x: auto;
+  /* left padding so rank "1" isn't cut off; bottom for scroll affordance */
+  padding: 8px 0 16px 12px;
+  scrollbar-width: none;
+}
+
+.posterStrip::-webkit-scrollbar {
+  display: none;
+}
+
+/* Each item: large rank number on the left, portrait poster on the right */
+.posterCard {
+  display: flex;
+  align-items: flex-end;
+  flex-shrink: 0;
+}
+
+.posterRank {
+  font-size: clamp(5rem, 9vw, 8.5rem);
+  font-weight: 900;
+  font-family: var(--font-heading);
+  line-height: 1;
+  color: #141414;
+  -webkit-text-stroke: 1px rgba(255, 255, 255, 0.55);
+  /* overlap the poster's left edge — rank sits in front */
+  margin-right: -22px;
+  padding-left: 4px;
+  z-index: 3;
+  position: relative;
+  user-select: none;
+}
+
+.posterImageWrap {
+  position: relative;
+  z-index: 2;
+  flex-shrink: 0;
+  border-radius: 8px;
+  overflow: hidden;
+  /* small right gap so next card's rank number is visible */
+  margin-right: 6px;
+}
+
+.posterImageWrap img {
+  display: block;
+  width: 130px;
+  height: 190px;
+  object-fit: cover;
+}
+
+/* Play indicator in top-left of poster */
+.streamMark {
+  position: absolute;
+  top: 6px;
+  left: 8px;
+  z-index: 3;
+  font-size: 1.1rem;
+  font-weight: 900;
+  font-style: italic;
+  color: #e50914;
+  line-height: 1;
+  font-family: var(--font-heading);
+  pointer-events: none;
+}
+
+.featureGrid {
+  margin-top: 20px;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.featureCard {
+  position: relative;
+  min-height: 230px;
+  padding: 22px;
+  border-radius: 24px;
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.06),
+    rgba(255, 255, 255, 0.02)
+  );
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.featureCard h3 {
+  margin: 0;
+  font-size: 1.7rem;
+}
+
+.featureCard p {
+  margin: 12px 0 0;
+  color: #d2d2d2;
+}
+
+.featureAccent {
+  display: inline-flex;
+  width: 52px;
+  height: 52px;
+  border-radius: 16px;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 26px;
+  background: linear-gradient(135deg, #e50914, #ff6a00);
+  font-weight: 800;
+}
+
+.faqList {
+  margin-top: 20px;
+  display: grid;
+  gap: 12px;
+}
+
+.faqItem {
+  border-radius: 20px;
+  background: #181818;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  overflow: hidden;
+}
+
+.faqItem summary {
+  padding: 20px 22px;
+  font-size: 1.05rem;
+  cursor: pointer;
+  list-style: none;
+}
+
+.faqItem summary::-webkit-details-marker {
+  display: none;
+}
+
+.faqItem p {
+  margin: 0;
+  padding: 0 22px 22px;
+  color: #d4d4d4;
+}
+
+.bottomCta {
+  margin: 28px auto 0;
+  max-width: 860px;
+  text-align: center;
+}
+
+.bottomCta p {
+  margin: 0;
+  color: #e7e7e7;
+}
+
+.emailFormBottom {
+  margin-top: 18px;
+}
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+@media (max-width: 1100px) {
+  .featureGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 900px) {
+  .topBar,
+  .trendingSection,
+  .featuresSection,
+  .faqSection,
+  .promoStrip {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+
+  .heroSection {
+    min-height: 680px;
+  }
+
+  .heroContent {
+    margin-top: 104px;
+  }
+
+  .emailForm,
+  .emailFormBottom,
+  .promoStrip {
+    flex-direction: column;
+  }
+
+  .featureGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .posterStrip {
+    grid-auto-columns: 150px;
+  }
+
+  .posterCard img {
+    height: 220px;
+  }
+}

@@ -1,0 +1,175 @@
+.page {
+  position: relative;
+  min-height: 100vh;
+  background: #000;
+  color: #fff;
+}
+
+.backgroundImage,
+.overlay {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.backgroundImage {
+  object-fit: cover;
+}
+
+.overlay {
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0.72), rgba(0, 0, 0, 0.9));
+}
+
+.topBar {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 24px 48px;
+}
+
+.brandLink {
+  border: none;
+  background: transparent;
+  padding: 0;
+  display: inline-flex;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.brandLogo {
+  display: block;
+  height: 42px;
+  width: auto;
+}
+
+.topBarActions {
+  display: flex;
+  gap: 14px;
+}
+
+.linkButton,
+.signInButton {
+  border: none;
+  font: inherit;
+  cursor: pointer;
+}
+
+.linkButton {
+  background: transparent;
+  color: #fff;
+  padding: 10px 14px;
+}
+
+.contentShell {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  place-items: center;
+  padding: 24px 16px 52px;
+}
+
+.signInCard {
+  width: min(440px, 100%);
+  background: rgba(0, 0, 0, 0.82);
+  border-radius: 22px;
+  padding: 40px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 26px 70px rgba(0, 0, 0, 0.45);
+}
+
+.signInCard h1 {
+  margin: 0;
+  font-size: clamp(2.2rem, 5vw, 3.4rem);
+}
+
+.signInCard p {
+  margin: 10px 0 0;
+  color: #d2d2d2;
+}
+
+.signInForm {
+  margin-top: 28px;
+  display: grid;
+  gap: 14px;
+}
+
+.signInForm label {
+  display: grid;
+  gap: 8px;
+  color: #e8e8e8;
+  font-size: 0.95rem;
+}
+
+.signInForm input {
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  background: rgba(20, 20, 20, 0.92);
+  color: #fff;
+  border-radius: 14px;
+  padding: 16px 18px;
+  font: inherit;
+}
+
+.signInButton {
+  border-radius: 999px;
+  background: #e50914;
+  color: #fff;
+  font-weight: 800;
+  padding: 16px 18px;
+  margin-top: 4px;
+}
+
+.formMeta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  font-size: 0.95rem;
+}
+
+.checkboxRow {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.cardFooter {
+  margin-top: 24px;
+  display: grid;
+  gap: 10px;
+}
+
+.cardFooter button,
+.cardFooter a {
+  color: #fff;
+}
+
+.cardFooter button {
+  background: transparent;
+  border: none;
+  padding: 0;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.cardFooter small {
+  color: #bdbdbd;
+  line-height: 1.5;
+}
+
+@media (max-width: 900px) {
+  .topBar {
+    padding: 20px 16px;
+  }
+
+  .signInCard {
+    padding: 28px 18px;
+  }
+
+  .formMeta {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}

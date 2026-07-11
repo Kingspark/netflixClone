@@ -1,0 +1,237 @@
+.topNav {
+  position: sticky;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 20;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 24px;
+  min-height: 70px;
+  padding: 0 48px;
+  background: #000;
+}
+
+.navLeft {
+  display: flex;
+  align-items: center;
+  gap: 42px;
+  min-width: 0;
+}
+
+.brandLink {
+  display: inline-flex;
+  align-items: center;
+  text-decoration: none;
+  flex-shrink: 0;
+}
+
+.brandLogo {
+  display: block;
+  width: auto;
+  height: 26px;
+}
+
+.mainNav {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 24px;
+  overflow: hidden;
+}
+
+.mainNav a,
+.profileMenu a {
+  color: #fff;
+  text-decoration: none;
+  font-size: 0.9rem;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.navRight {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  position: relative;
+}
+
+.searchShell {
+  display: flex;
+  align-items: center;
+  width: 38px;
+  height: 36px;
+  overflow: hidden;
+  border: 1px solid transparent;
+  transition:
+    width 180ms ease,
+    border-color 180ms ease,
+    background-color 180ms ease;
+}
+
+.searchOpen {
+  width: 236px;
+  border-color: rgba(255, 255, 255, 0.9);
+  background: rgba(0, 0, 0, 0.92);
+}
+
+.searchShell input {
+  width: 100%;
+  border: none;
+  outline: none;
+  background: transparent;
+  color: #fff;
+  font-size: 0.95rem;
+}
+
+.searchShell input::placeholder {
+  color: #bdbdbd;
+}
+
+.iconButton,
+.profileTrigger {
+  border: none;
+  background: transparent;
+  color: #fff;
+  cursor: pointer;
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.iconStroke {
+  width: 22px;
+  height: 22px;
+}
+
+.notificationDot {
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #e50914;
+  transform: translate(9px, -7px);
+}
+
+.profileShell {
+  position: relative;
+}
+
+.profileTrigger {
+  gap: 8px;
+}
+
+.profileAvatar {
+  width: 30px;
+  height: 30px;
+  border-radius: 4px;
+  background: #5f5555;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.profileChevron .iconStroke {
+  width: 16px;
+  height: 16px;
+}
+
+.profileMenu {
+  position: absolute;
+  top: calc(100% + 10px);
+  right: 0;
+  min-width: 150px;
+  background: rgba(10, 10, 10, 0.94);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 2px;
+  padding: 10px 0;
+}
+
+.profileMenu a {
+  display: block;
+  padding: 12px 16px;
+}
+
+.menuDivider {
+  height: 1px;
+  background: rgba(255, 255, 255, 0.2);
+  margin: 8px 0;
+}
+
+/* Hamburger button — hidden on desktop */
+.hamburgerButton {
+  display: none;
+  border: none;
+  background: transparent;
+  color: #fff;
+  cursor: pointer;
+  padding: 0;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Mobile slide-down nav panel */
+.mobileMenu {
+  position: absolute;
+  top: 70px;
+  left: 0;
+  right: 0;
+  z-index: 19;
+  background: rgba(0, 0, 0, 0.97);
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  display: flex;
+  flex-direction: column;
+  padding: 12px 0 20px;
+}
+
+.mobileMenu a {
+  color: #fff;
+  text-decoration: none;
+  font-size: 1rem;
+  font-weight: 500;
+  padding: 14px 24px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  transition: background 120ms ease;
+}
+
+.mobileMenu a:last-child {
+  border-bottom: none;
+}
+
+.mobileMenu a:hover {
+  background: rgba(255, 255, 255, 0.06);
+}
+
+@media (max-width: 1100px) {
+  .topNav {
+    padding: 0 20px;
+    gap: 16px;
+  }
+
+  .navLeft {
+    gap: 18px;
+  }
+
+  .mainNav {
+    gap: 14px;
+  }
+}
+
+@media (max-width: 768px) {
+  .topNav {
+    padding: 0 16px;
+    flex-wrap: nowrap;
+    align-items: center;
+  }
+
+  /* Hide inline nav — replaced by hamburger drawer */
+  .mainNav {
+    display: none;
+  }
+
+  /* Show hamburger button */
+  .hamburgerButton {
+    display: inline-flex;
+  }
+}

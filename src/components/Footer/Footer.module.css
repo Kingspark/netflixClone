@@ -1,0 +1,84 @@
+.siteFooter {
+  background: #1c1c1c;
+  padding: 36px 0 12px;
+}
+
+.socialRow,
+.footerGrid,
+.copyright {
+  width: min(100%, 1000px);
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.socialRow {
+  display: flex;
+  gap: 24px;
+  margin-bottom: 28px;
+}
+
+.socialRow a,
+.footerColumn a {
+  color: #8f8f8f;
+  text-decoration: none;
+}
+
+.socialIcon {
+  width: 28px;
+  height: 28px;
+}
+
+.footerGrid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 34px;
+}
+
+.footerColumn {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.legalBlock {
+  width: min(100%, 1000px);
+  margin: 28px auto 0;
+  padding-top: 20px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.legalPrimary {
+  margin: 0;
+  color: #6e6e6e;
+  font-size: 0.8rem;
+  line-height: 1.55;
+}
+
+.legalSecondary {
+  margin: 0;
+  color: #555;
+  font-size: 0.74rem;
+  line-height: 1.55;
+}
+
+.legalSecondary a {
+  color: #7aaedc;
+  text-decoration: none;
+}
+
+.legalSecondary a:hover {
+  text-decoration: underline;
+}
+
+@media (max-width: 900px) {
+  .siteFooter {
+    padding: 28px 16px 18px;
+  }
+
+  .footerGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
