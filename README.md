@@ -124,31 +124,32 @@ src/
 
 ## Deployment
 
-### Vercel (recommended)
+This app ships as a single Node process: `server.js` runs the Express API
+and also serves the built frontend (`npm run build` → `dist/`), so one
+process handles everything — no separate static host needed.
+
+### Hostinger (Node.js App via hPanel)
 
 1. Push this repo to GitHub.
-2. Import the project at [vercel.com](https://vercel.com).
-3. Vercel auto-detects Vite — no extra config needed.
-4. In **Project Settings → Environment Variables**, add:
-   ```
-   VITE_TMDB_API_KEY = your_real_tmdb_key_here
-   ```
-5. Deploy — done.
+2. In hPanel, create a **Node.js App**:
+   - **Application root:** the folder containing `server.js` and `package.json`
+   - **Application startup file:** `server.js`
+   - **Node version:** any current LTS
+3. Run `npm install` and `npm run build` in that app's context (hPanel's
+   deploy tooling, or via SSH) so `dist/` exists alongside `server.js`.
+4. In the Node app's environment variables panel, set everything listed in
+   `.env.example`: `VITE_TMDB_API_KEY`, `GEMINI_API_KEY`, `GEMINI_MODEL`,
+   `MYSQL_HOST`/`MYSQL_PORT`/`MYSQL_USER`/`MYSQL_PASSWORD`/`MYSQL_DATABASE`,
+   `JWT_SECRET`, and `CORS_ORIGIN` (your real domain).
+5. Create the MySQL database in hPanel and run `schema.sql` against it.
+6. Make sure the domain is bound to this Node app — check the generated
+   `.htaccess` in the app root has `PassengerBaseURI "/"` so requests to
+   `/api/*` are actually proxied to the Node process instead of falling
+   through to static file serving.
+7. Start/restart the app from hPanel.
 
-### Netlify
-
-1. Push this repo to GitHub.
-2. Import at [netlify.com](https://netlify.com).
-3. Build settings:
-   - **Build command:** `npm run build`
-   - **Publish directory:** `dist`
-4. In **Site Settings → Environment Variables**, add:
-   ```
-   VITE_TMDB_API_KEY = your_real_tmdb_key_here
-   ```
-5. Deploy.
-
-> **Important:** Never commit your real API key. The `.env.local` file is listed in `.gitignore` and will not be pushed to GitHub.
+> **Important:** Never commit real secrets. All `.env*` files except
+> `.env.example` are listed in `.gitignore` and will not be pushed to GitHub.
 
 ---
 

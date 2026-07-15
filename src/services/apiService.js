@@ -24,10 +24,10 @@ async function request(path, options = {}) {
     throw new Error('Network error — check your connection.')
   }
 
-  // Guard against non-JSON responses (e.g. HTML 404 pages from dev server)
+  // Guard against non-JSON responses (e.g. an HTML error page instead of the API)
   const contentType = res.headers.get('content-type') ?? ''
   if (!contentType.includes('application/json')) {
-    if (res.status === 404) throw new Error('API route not found. Run `vercel dev` instead of `npm run dev`.')
+    if (res.status === 404) throw new Error('API route not found. Check that the backend server is running and reachable.')
     throw new Error(`Unexpected server response (${res.status})`)
   }
 

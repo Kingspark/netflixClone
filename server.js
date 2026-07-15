@@ -26,7 +26,7 @@ const PORT = process.env.PORT ?? process.env.API_PORT ?? 5001
 app.use(cors({ origin: process.env.CORS_ORIGIN ?? 'http://localhost:4000' }))
 app.use(express.json())
 
-// Wrap Vercel-style handlers (req, res) — Express uses the same signature
+// These handlers use a plain (req, res) signature — Express calls them directly
 app.post('/api/auth/register', registerHandler)
 app.post('/api/auth/login', loginHandler)
 app.get('/api/movies/liked', likedHandler)
