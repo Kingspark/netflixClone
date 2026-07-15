@@ -467,6 +467,38 @@ export async function searchBrowseModel(query) {
   }
 }
 
+export async function enrichRecommendationsWithPosters(recommendations) {
+  const apiKey = import.meta.env.VITE_TMDB_API_KEY
+
+  if (!apiKey || recommendations.length === 0) {
+    return recommendations.map((rec) => ({ ...rec, image: '' }))
+  }
+
+  const enriched = await Promise.all(
+    recommendations.map(async (rec) => {
+      const searchType = rec.type === 'tv' ? 'tv' : 'movie'
+
+      try {
+        const payload = await requestTmdb(
+          `/search/${searchType}?query=${encodeURIComponent(rec.title)}&include_adult=false&page=1`
+        )
+        const match = payload?.results?.[0]
+
+        return {
+          ...rec,
+          id: match?.id ?? rec.title,
+          image: match?.poster_path ? `${tmdbPosterBaseUrl}${match.poster_path}` : '',
+          backdrop: match?.backdrop_path ? `${tmdbBackdropBaseUrl}${match.backdrop_path}` : '',
+        }
+      } catch {
+        return { ...rec, image: '' }
+      }
+    })
+  )
+
+  return enriched
+}
+
 export async function loadTitleDetails(content) {
   const fallbackModel = buildLocalBrowseModel()
   const fallbackImage = fallbackModel.hero.backdrop

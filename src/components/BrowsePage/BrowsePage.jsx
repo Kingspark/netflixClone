@@ -3,9 +3,12 @@ import Header from '../Header/Header'
 import HeroBanner from '../HeroBanner/HeroBanner'
 import MovieRow from '../MovieRow/MovieRow'
 import Footer from '../Footer/Footer'
+import CommentsSection from '../CommentsSection/CommentsSection'
+import Icon from '../Icon/Icon'
 import { defaultCardId, footerColumns } from '../../data/catalog'
 import { buildLocalBrowseModel } from '../../data/catalog'
-import { loadBrowseModel, loadTitleDetails, searchBrowseModel } from '../../services/movieService'
+import { loadBrowseModel, loadTitleDetails, searchBrowseModel, enrichRecommendationsWithPosters } from '../../services/movieService'
+import { moviesApi, aiApi } from '../../services/apiService'
 import styles from '../../App.module.css'
 
 function formatDetailValue(value, fallback = 'Not available') {
@@ -16,15 +19,10 @@ function formatDetailValue(value, fallback = 'Not available') {
   return value || fallback
 }
 
-export default function BrowsePage() {
+export default function BrowsePage({ authToken = null, currentUser = null, onSignOut = () => {} }) {
   const hasTmdbApiKey = Boolean(import.meta.env.VITE_TMDB_API_KEY)
 
-  // Tracks which card the user is hovering over across all rows.
-  // defaultCardId acts as a "nothing selected" sentinel so no card starts expanded.
   const [activeCardId, setActiveCardId] = useState(defaultCardId)
-
-  // Seed the UI with local static data immediately so the page renders
-  // without waiting for the network. The live fetch below replaces this.
   const [browseModel, setBrowseModel] = useState(() => ({
     ...buildLocalBrowseModel(),
     dataSource: 'fallback',
@@ -36,9 +34,73 @@ export default function BrowsePage() {
   const [isDetailsLoading, setIsDetailsLoading] = useState(false)
   const detailsRequestId = useRef(0)
 
+  // Liked movies (Set of movie IDs for O(1) lookup)
+  const [likedIds, setLikedIds] = useState(new Set())
+  // AI recommendations row
+  const [aiRecommendations, setAiRecommendations] = useState([])
+
   const handleSearchQueryChange = (nextQuery) => {
     setSearchQuery(nextQuery)
     setSearchModel(null)
+  }
+
+  // Load liked movies when authenticated
+  useEffect(() => {
+    if (!authToken) return
+    moviesApi.getLiked()
+      .then(({ liked }) => setLikedIds(new Set(liked.map((m) => String(m.movie_id)))))
+      .catch(() => {})
+  }, [authToken])
+
+  async function refreshAiRecommendations() {
+    try {
+      const { recommendations } = await aiApi.getRecommendations()
+      if (!recommendations?.length) return
+      const enriched = await enrichRecommendationsWithPosters(recommendations)
+      setAiRecommendations(enriched)
+    } catch (error) {
+      console.error('AI recommendations failed:', error.message)
+    }
+  }
+
+  // Load AI recommendations when authenticated
+  useEffect(() => {
+    if (!authToken) return
+    refreshAiRecommendations()
+  }, [authToken])
+
+  async function handleToggleLike(movie) {
+    if (!authToken || !movie?.id) return
+    const id = String(movie.id)
+    const isLiked = likedIds.has(id)
+    // Optimistic UI update
+    setLikedIds((prev) => {
+      const next = new Set(prev)
+      isLiked ? next.delete(id) : next.add(id)
+      return next
+    })
+    try {
+      if (isLiked) {
+        await moviesApi.unlike(id)
+      } else {
+        await moviesApi.like({
+          movieId: id,
+          title: movie.title,
+          genres: movie.tags ?? [],
+          posterPath: movie.image ?? '',
+          mediaType: movie.mediaType ?? 'movie',
+        })
+      }
+      // Refresh AI recommendations after a like change
+      refreshAiRecommendations()
+    } catch {
+      // Revert on failure
+      setLikedIds((prev) => {
+        const next = new Set(prev)
+        isLiked ? next.add(id) : next.delete(id)
+        return next
+      })
+    }
   }
 
   // Fetch the live browse model (hero spotlight + movie rows) once on mount.
@@ -134,23 +196,54 @@ export default function BrowsePage() {
 
   return (
     <div className={styles.appShell}>
-      <Header searchQuery={searchQuery} onSearchQueryChange={handleSearchQueryChange} />
+      <Header
+        searchQuery={searchQuery}
+        onSearchQueryChange={handleSearchQueryChange}
+        currentUser={currentUser}
+        onSignOut={onSignOut}
+      />
       <HeroBanner spotlight={displayModel?.hero ?? browseModel.hero} onMoreInfo={handleOpenDetails} />
 
-      {/* Render one horizontally-scrollable MovieRow per content category.
-          activeCardId / onActiveCardChange are shared so only one card across
-          all rows can be in the expanded hover state at a time. */}
       <main className={styles.rowsArea}>
         {!hasTmdbApiKey ? (
           <p className={styles.apiNotice}>
             TMDB API key not detected. Create .env.local with VITE_TMDB_API_KEY to load live movie and TV data.
           </p>
         ) : null}
-
         {hasTmdbApiKey && browseModel?.dataSource === 'fallback' ? (
           <p className={styles.apiWarningNotice}>TMDB fallback: {browseModel?.dataReason ?? 'Unknown error.'}</p>
         ) : null}
         {searchQuery.trim() && !searchModel ? <p className={styles.searchStatus}>Searching TMDB...</p> : null}
+
+        {/* AI Recommendations row — shown when logged in and AI has results */}
+        {authToken && aiRecommendations.length > 0 ? (
+          <MovieRow
+            key="ai-recommendations"
+            row={{
+              key: 'ai-recommendations',
+              title: '✦ Recommended for You',
+              subtitle: 'Personalised by AI based on what you have liked',
+              items: aiRecommendations.map((r, i) => ({
+                id: `ai-${i}`,
+                title: r.title,
+                image: r.image || '',
+                backdrop: r.backdrop || '',
+                type: r.type ?? 'Movie',
+                overview: r.reason,
+                tags: [],
+                rating: '',
+                quality: 'AI',
+              })),
+            }}
+            activeCardId={activeCardId}
+            defaultCardId={defaultCardId}
+            onActiveCardChange={setActiveCardId}
+            onMoreInfo={handleOpenDetails}
+            likedIds={likedIds}
+            onToggleLike={handleToggleLike}
+          />
+        ) : null}
+
         {(displayModel?.rows ?? browseModel.rows).map((row) => (
           <MovieRow
             key={row.key}
@@ -159,6 +252,8 @@ export default function BrowsePage() {
             defaultCardId={defaultCardId}
             onActiveCardChange={setActiveCardId}
             onMoreInfo={handleOpenDetails}
+            likedIds={likedIds}
+            onToggleLike={handleToggleLike}
           />
         ))}
       </main>
@@ -212,6 +307,14 @@ export default function BrowsePage() {
                 <p><strong>Homepage:</strong> {selectedTitle.homepage ? <a href={selectedTitle.homepage} target="_blank" rel="noreferrer">Open official page</a> : 'Not available'}</p>
                 <p><strong>IMDb ID:</strong> {formatDetailValue(selectedTitle.imdbId)}</p>
               </div>
+
+              <CommentsSection
+                movieId={selectedTitle.id}
+                title={selectedTitle.title}
+                mediaType={selectedTitle.mediaType}
+                authToken={authToken}
+                currentUser={currentUser}
+              />
             </div>
           </section>
         </div>

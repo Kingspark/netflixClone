@@ -2,7 +2,7 @@ import { useRef } from 'react'
 import Icon from '../Icon/Icon'
 import styles from './MovieRow.module.css'
 
-export default function MovieRow({ row, activeCardId, defaultCardId, onActiveCardChange, onMoreInfo = () => {} }) {
+export default function MovieRow({ row, activeCardId, defaultCardId, onActiveCardChange, onMoreInfo = () => {}, likedIds = new Set(), onToggleLike = () => {} }) {
   const rowRef = useRef(null)
   const offsetRef = useRef(0)
 
@@ -59,7 +59,13 @@ export default function MovieRow({ row, activeCardId, defaultCardId, onActiveCar
                 tabIndex={0}
               >
                 <article className={styles.movieCard}>
-                  <img src={movie.image} alt={movie.title} loading="lazy" />
+                  {movie.image ? (
+                    <img src={movie.image} alt={movie.title} loading="lazy" />
+                  ) : (
+                    <div className={styles.imagePlaceholder} aria-hidden="true">
+                      <span>{movie.title}</span>
+                    </div>
+                  )}
                   <div className={styles.expandedPanel}>
                     <strong className={styles.cardTitle}>{movie.title}</strong>
 
@@ -70,13 +76,26 @@ export default function MovieRow({ row, activeCardId, defaultCardId, onActiveCar
                       <button type="button" aria-label={`Add ${movie.title} to list`}>
                         <Icon name="plus" className={styles.cardActionIcon} />
                       </button>
-                      <button type="button" aria-label={`Like ${movie.title}`}>
-                        <Icon name="check" className={styles.cardActionIcon} />
+                      <button
+                        type="button"
+                        aria-label={likedIds.has(String(movie.id)) ? `Unlike ${movie.title}` : `Like ${movie.title}`}
+                        onClick={() => onToggleLike(movie)}
+                        style={{
+                          color: likedIds.has(String(movie.id)) ? '#e50914' : undefined,
+                          borderColor: likedIds.has(String(movie.id)) ? '#e50914' : undefined,
+                        }}
+                      >
+                        <Icon
+                          name="heart"
+                          className={styles.cardActionIcon}
+                          filled={likedIds.has(String(movie.id))}
+                        />
                       </button>
                       <button
                         type="button"
                         aria-label={`More details about ${movie.title}`}
                         className={styles.expandIcon}
+                        onClick={() => onMoreInfo(movie)}
                       >
                         <Icon name="chevronDown" className={styles.cardActionIcon} />
                       </button>

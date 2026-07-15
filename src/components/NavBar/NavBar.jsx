@@ -12,7 +12,7 @@ const navItems = [
   'Browse by Language',
 ]
 
-export default function NavBar({ searchQuery = '', onSearchQueryChange = () => {} }) {
+export default function NavBar({ searchQuery = '', onSearchQueryChange = () => {}, onSignOut = () => {} }) {
   const [searchOpen, setSearchOpen] = useState(false)
   const [accountMenuOpen, setAccountMenuOpen] = useState(false)
   const [menuOpen, setMenuOpen] = useState(false)
@@ -81,10 +81,22 @@ export default function NavBar({ searchQuery = '', onSearchQueryChange = () => {
 
           {accountMenuOpen ? (
             <div className={styles.profileMenu} role="menu">
-              <a href="#" role="menuitem">Account</a>
-              <a href="#" role="menuitem">Help Center</a>
-              <div className={styles.menuDivider}></div>
-              <a href="#" role="menuitem">Sign out</a>
+              <div className={styles.profileMenuInner}>
+                <a href="#" role="menuitem">Account</a>
+                <a href="#" role="menuitem">Help Center</a>
+                <div className={styles.menuDivider}></div>
+                <a
+                  href="#"
+                  role="menuitem"
+                  onClick={(event) => {
+                    event.preventDefault()
+                    setAccountMenuOpen(false)
+                    onSignOut()
+                  }}
+                >
+                  Sign out
+                </a>
+              </div>
             </div>
           ) : null}
         </div>

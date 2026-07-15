@@ -1,4 +1,4 @@
-export default function Icon({ name, className = '' }) {
+export default function Icon({ name, className = '', filled = false }) {
   const icons = {
     search: (
       <path d="M21 21l-4.35-4.35m1.85-5.15a7 7 0 11-14 0 7 7 0 0114 0z" />
@@ -30,6 +30,9 @@ export default function Icon({ name, className = '' }) {
       </>
     ),
     check: <path d="M7 12.5l3.2 3.2L17 8.9" />,
+    heart: (
+      <path d="M12 20.5s-7.5-4.6-10-9.4C.4 7.6 2.3 4 5.9 4c2 0 3.5 1 6.1 3.6C14.6 5 16.1 4 18.1 4c3.6 0 5.5 3.6 3.9 7.1-2.5 4.8-10 9.4-10 9.4z" />
+    ),
     facebook: <path d="M13 9h3V5h-3c-2.2 0-4 1.8-4 4v3H6v4h3v5h4v-5h3l1-4h-4V9a1 1 0 011-1z" />,
     instagram: (
       <>
@@ -65,7 +68,7 @@ export default function Icon({ name, className = '' }) {
       viewBox="0 0 24 24"
       aria-hidden="true"
       className={className}
-      fill="none"
+      fill={filled ? 'currentColor' : 'none'}
       stroke="currentColor"
       strokeWidth="1.8"
       strokeLinecap="round"

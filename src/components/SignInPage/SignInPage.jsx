@@ -1,13 +1,45 @@
+import { useState } from 'react'
 import Footer from '../Footer/Footer'
 import logo from '../../assets/ImagesForInitialUse/image/logo.png'
 import loginBackground from '../../assets/ImagesForInitialUse/image/login.jpg'
 import { footerColumns } from '../../data/catalog'
+import { authApi } from '../../services/apiService'
 import styles from './SignInPage.module.css'
 
-export default function SignInPage({ onBackHome, onBrowse }) {
-  const handleSubmit = (event) => {
+export default function SignInPage({ onBackHome, onBrowse, onAuthSuccess }) {
+  const [mode, setMode] = useState('signin') // 'signin' | 'register'
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+  const [error, setError] = useState('')
+  const [success, setSuccess] = useState('')
+  const [loading, setLoading] = useState(false)
+
+  async function handleSubmit(event) {
     event.preventDefault()
-    onBrowse()
+    setError('')
+    setSuccess('')
+    setLoading(true)
+
+    try {
+      if (mode === 'register') {
+        await authApi.register(email, password)
+        // Show confirmation and switch to sign-in — don't auto-navigate
+        setSuccess('Account created! Please sign in with your new credentials.')
+        setMode('signin')
+        setPassword('')
+      } else {
+        const { token, email: returnedEmail } = await authApi.login(email, password)
+        if (onAuthSuccess) {
+          onAuthSuccess(token, returnedEmail)
+        } else {
+          onBrowse()
+        }
+      }
+    } catch (err) {
+      setError(err.message)
+    } finally {
+      setLoading(false)
+    }
   }
 
   return (
@@ -32,39 +64,53 @@ export default function SignInPage({ onBackHome, onBrowse }) {
 
       <main className={styles.contentShell}>
         <section className={styles.signInCard}>
-          <h1>Sign In</h1>
+          <h1>{mode === 'signin' ? 'Sign In' : 'Create Account'}</h1>
           <p>Sign in to your StreamVault account to continue watching.</p>
+
+          {success ? <p className={styles.successMsg}>{success}</p> : null}
+          {error ? <p className={styles.errorMsg}>{error}</p> : null}
 
           <form className={styles.signInForm} onSubmit={handleSubmit}>
             <label>
-              Email or phone number
-              <input type="text" placeholder="Email or phone number" required />
+              Email
+              <input
+                type="email"
+                placeholder="Email address"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+              />
             </label>
             <label>
               Password
-              <input type="password" placeholder="Password" required />
+              <input
+                type="password"
+                placeholder="Password (min 6 characters)"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+                minLength={6}
+              />
             </label>
 
-            <button type="submit" className={styles.signInButton}>
-              Sign In
+            <button type="submit" className={styles.signInButton} disabled={loading}>
+              {loading ? 'Please wait...' : mode === 'signin' ? 'Sign In' : 'Create Account'}
             </button>
-
-            <div className={styles.formMeta}>
-              <label className={styles.checkboxRow}>
-                <input type="checkbox" />
-                <span>Remember me</span>
-              </label>
-              <a href="#">Need help?</a>
-            </div>
           </form>
 
           <div className={styles.cardFooter}>
             <p>
-              New to StreamVault? <button type="button" onClick={onBackHome}>Go back to home</button>
+              {mode === 'signin' ? (
+                <>New to StreamVault?{' '}
+                  <button type="button" onClick={() => { setMode('register'); setError('') }}>Create an account</button>
+                </>
+              ) : (
+                <>Already have an account?{' '}
+                  <button type="button" onClick={() => { setMode('signin'); setError('') }}>Sign in</button>
+                </>
+              )}
             </p>
-            <small>
-              This is a learning project — no real account or payment is required.
-            </small>
+            <small>This is a learning project — no real payment is required.</small>
           </div>
         </section>
       </main>

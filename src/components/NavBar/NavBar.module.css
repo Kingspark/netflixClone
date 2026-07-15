@@ -139,9 +139,13 @@
 
 .profileMenu {
   position: absolute;
-  top: calc(100% + 10px);
+  top: 100%;
   right: 0;
   min-width: 150px;
+  padding-top: 10px;
+}
+
+.profileMenuInner {
   background: rgba(10, 10, 10, 0.94);
   border: 1px solid rgba(255, 255, 255, 0.16);
   border-radius: 2px;
